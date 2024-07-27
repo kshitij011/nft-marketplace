@@ -4,6 +4,7 @@ import Navbar from "./Navbar";
 
 import NFTAbi from "./contractsData/NFT.json";
 import MarketplaceAbi from "./contractsData/Marketplace.json";
+import Home from "./Home";
 
 // 0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0 marketplace addr
 // 0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9 nft addr
@@ -39,10 +40,14 @@ function App() {
   return (
     <>
       <Navbar web3Handler={web3Handler} account={account}/>
-      {loading &&
+      {loading ? (
         <h1 className="text-3xl text-gray-600 font-2xl h-lvh flex justify-center items-center">
           ...awaiting metamask connection
         </h1>
+      ) :(
+        <Home marketplace={marketplace} nft={nft}/>
+
+      )
       }
     </>
   )
