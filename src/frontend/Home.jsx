@@ -20,6 +20,7 @@ function Home({marketplace, nft}) {
 
   return (
     <div className="flex justify-center">hello</div>
+
   )
 }
 

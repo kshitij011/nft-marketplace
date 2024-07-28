@@ -1,15 +1,10 @@
 import React from 'react'
-import { Link, Route, Routes } from 'react-router-dom'
-import Home from './Home'
-import Create from './Create'
-import ListedItems from './ListedItems'
-import MyItems from './MyItems'
+import { Link} from 'react-router-dom'
 
 export default function Navbar({web3Handler, account}) {
   return (
-    <>
-        <div className='bg-slate-500 py-3 text-white text-2xl'>
-            <ul className='flex inline justify-around'>
+        <div className='bg-slate-500 py-3 text-white text-2xl h-16'>
+            <ul className='flex justify-around'>
                 <li className='font-bold text-red-400'><Link to="/">Home</Link></li>
                 <li><Link to="/create">Create</Link></li>
                 <li><Link to="/my-listed-items">My Listed Items</Link></li>
@@ -27,15 +22,6 @@ export default function Navbar({web3Handler, account}) {
                     )}
                 </div>
             </ul>
-
         </div>
-
-        <Routes>
-            <Route path = "/" element={<Home />}/>
-            <Route path = "/create" element={<Create />}/>
-            <Route path = "/my-listed-items" element={<ListedItems />}/>
-            <Route path = "/my-items" element={<MyItems />}/>
-        </Routes>
-    </>
   )
 }

@@ -45,36 +45,24 @@ function Create() {
     }
 
     return (
-        <>
-        {!loading && (
-        <div className="container-fluid mt-5 flex ">
-          <div className="row">
-            <main role="main" className="col-lg-12 mx-auto" style={{ maxWidth: '1000px' }}>
-              <div className="content mx-auto">
-                <form className="g-4">
-                  <input
-                    type="file"
-                    required
-                    name="file"
-                    onChange={uploadToIPFS}
-                  />
-                  <input onChange={(e) => setName(e.target.value)} size="lg" required type="text" placeholder="Name" />
-                  <input onChange={(e) => setDescription(e.target.value)} size="lg" required as="textarea" placeholder="Description" />
-                  <input onChange={(e) => setPrice(e.target.value)} size="lg" required type="number" placeholder="Price in ETH" />
-                  <div className="d-grid px-0">
-                    <button onClick={createNFT} variant="primary" size="lg">
-                      Create & List NFT!
-                    </button>
-                  </div>
-                </form>
-              </div>
-            </main>
-          </div>
+      <div className="h-lvh">
+        <form className="flex flex-col h-3/5 items-center justify-around border-black">
+        <input
+          type="file"
+          required
+          name="file"
+          onChange={uploadToIPFS}
+        />
+        <input onChange={(e) => setName(e.target.value)} size="lg" required type="text" placeholder="Name" />
+        <input onChange={(e) => setDescription(e.target.value)} size="lg" required as="textarea" placeholder="Description" />
+        <input onChange={(e) => setPrice(e.target.value)} size="lg" required type="number" placeholder="Price in ETH" />
+        <div className="bg-blue-400 px-2 rounded-md text-2xl font-bold text-gray-700">
+          <button onClick={createNFT} variant="primary" size="lg">
+              Create & List NFT!
+          </button>
         </div>
-        )}
-        {console.log(nft)}
-        </>
-
+      </form>
+      </div>
     );
 }
 
