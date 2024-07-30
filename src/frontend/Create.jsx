@@ -3,12 +3,15 @@ import { useState } from 'react'
 import { ethers } from 'ethers'
 import { create as ipfsHttpClient } from 'ipfs-http-client'
 const client = ipfsHttpClient('https://ipfs.infura.io:5001/api/v0')
+const projectId = import.meta.infura_api;
+const projectSecret = import.meta.infura.secret;
 
 function Create() {
     const [image, setImage] = useState('')
     const [price, setPrice] = useState(null)
     const [name, setName] = useState('')
     const [description, setDescription] = useState('')
+
     const uploadToIPFS = async (event) => {
       event.preventDefault()
       const file = event.target.files[0]
