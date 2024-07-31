@@ -5,6 +5,7 @@ import { ethers } from 'ethers';
 function Home({marketplace, nft}) {
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
+
   const marketplaceItems = async () => {
     const itemCount = await marketplace.itemCount()
     let items = []
@@ -51,7 +52,6 @@ function Home({marketplace, nft}) {
 
   return (
     <div className="flex justify-center">
-
       <div  className='overflow-hidden bg-purple-800 mt-5 rounded-md ml-5 p-2 justify-between flex flex-col items-center max-h-72 max-w-48'>
         <div className="h-40 flex items-center">
         <img src="https://www.w3schools.com/html/img_girl.jpg" alt="Image" className='max-h-40 max-w-40 rounded object-cover'/>
@@ -68,9 +68,6 @@ function Home({marketplace, nft}) {
           </div>
         </div>
       </div>
-
-
-
 
       {
         items.length > 0 ?
