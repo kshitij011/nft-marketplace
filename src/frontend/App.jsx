@@ -1,4 +1,4 @@
-import { ethers } from "ethers";
+import { ethers, Contract } from "ethers";
 import { useState } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Navbar from "./Navbar";
@@ -29,13 +29,13 @@ function App() {
     const provider = new ethers.BrowserProvider(window.ethereum);
     const signer = await provider.getSigner();
     loadContracts(signer);
-    console.log("web3handler ran");
   }
 
   const loadContracts = async(signer) => {
-    const marketplace = new ethers.Contract(marketplaceAddress, MarketplaceAbi.abi, signer)
+    const marketplace = new Contract(marketplaceAddress, MarketplaceAbi.abi, signer)
     setMarketplace(marketplace);
-    const nft = new ethers.Contract(nftAddress, NFTAbi.abi, signer);
+    //console.log("Marketplace", marketplace.target); // Use .target to get the address in ethers v6
+    const nft = new Contract(nftAddress, NFTAbi.abi, signer);
     setNft(nft);
     setLoading(false);
   }
@@ -52,7 +52,7 @@ function App() {
         {/* <Home marketplace={marketplace} nft={nft}/> */}
         <Routes>
             <Route path = "/" element={<Home marketplace={marketplace} nft={nft}/>}/>
-            <Route path = "/create" element={<Create />}/>
+            <Route path = "/create" element={<Create marketplace={marketplace} nft={nft}/>}/>
             <Route path = "/my-listed-items" element={<ListedItems />}/>
             <Route path = "/my-items" element={<MyItems />}/>
         </Routes>
@@ -64,3 +64,5 @@ function App() {
 }
 
 export default App
+
+// npx hardhat ignition deploy ./ignition/modules/NFT.cjs --network localhost

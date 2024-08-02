@@ -1,12 +1,30 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useState } from 'react'
 import { ethers } from 'ethers'
 
-function Create() {
+function Create({ marketplace, nft }) {
   const [image, setImage] = useState('')
   const [price, setPrice] = useState(null)
   const [name, setName] = useState('')
   const [description, setDescription] = useState('')
+  const [hash, setHash] = useState('');
+  const [metadataHash, setMetadataHash] = useState('');
+
+  useEffect(()=>{
+    if (hash) {
+      const imageUrl = `https://gold-strict-puma-309.mypinata.cloud/ipfs/${hash}`;
+      setImage(imageUrl);
+      console.log("Image URL set:", imageUrl);
+    }
+  }, [hash]);
+
+  useEffect(() => {
+    if (metadataHash) {
+      const metadataUrl = `https://gateway.pinata.cloud/ipfs/${metadataHash}`;
+      console.log("Metadata URL set:", metadataUrl);
+      mintThenList(metadataUrl); // Call mintThenList with the correct metadata URL
+    }
+  }, [metadataHash]);
 
   const uploadToIPFS = async (event) => {
     event.preventDefault()
@@ -15,18 +33,6 @@ function Create() {
       try {
         const fileData = new FormData();
         fileData.append("file", file);
-        // const responseData = await axios({
-        //   method: "post",
-        //   url: "https://api.pinata.cloud/pinning/pinFileToIPFS",
-        //   data: fileData,
-        //   headers: {
-        //     pinata_api_key: import.meta.env.VITE_PINATA_API_KEY,
-        //     pinata_secret_api_key: import.meta.env.VITE_PINATA_API_SECRET,
-        //     "Content-Type": "multipart/form-data"
-        //   }
-        // })
-        // const fileUrl= "https://gateway.pinata.cloud/ipfs/" + responseData.data.IpfsHash;
-        // console.log(fileUrl);
         const request = await fetch(
           "https://api.pinata.cloud/pinning/pinFileToIPFS",
           {
@@ -37,34 +43,60 @@ function Create() {
             body: fileData
           }
         );
-        const result = await request.add(JSON.stringify({image, price, name, description}))
-        const response = await request.json();
-        console.log(response);
+        const response = await request.json()
+        setHash(response.IpfsHash);
       } catch (error){
         console.log("ipfs image upload error: ", error)
       }
     }
   }
-  const createNFT = async () => {
-    if (!image || !price || !name || !description) return
-    try{
-      const result = await client.add(JSON.stringify({image, price, name, description}))
-      mintThenList(result)
-    } catch(error) {
-      console.log("ipfs uri upload error: ", error)
+  const createNFT = async (e) => {
+    e.preventDefault();
+    if (image && price && name && description){
+      try {
+        // Create metadata
+        const metadata = {
+          image: image,
+          price,
+          name,
+          description
+        };
+
+        // Upload metadata to IPFS
+        const metadataResponse = await fetch(
+          "https://api.pinata.cloud/pinning/pinJSONToIPFS",
+          {
+            method: "POST",
+            headers: {
+              Authorization: `Bearer ${import.meta.env.VITE_JWT}`,
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(metadata)
+          }
+        );
+        const metadataJson = await metadataResponse.json();
+        setMetadataHash(metadataJson.IpfsHash)
+        console.log("Uploaded metadata to IPFS:", metadataJson.IpfsHash);
+      } catch (error) {
+        console.log("IPFS metadata upload error:", error);
+      }
+    }else{
+      alert("Fill all info");
     }
   }
-  const mintThenList = async (result) => {
-    const uri = `https://ipfs.infura.io/ipfs/${result.path}`
+
+  const mintThenList = async (uri) => {
+    console.log("metadataURI(mintThenList): ", uri);
     // mint nft
     await(await nft.mint(uri)).wait()
     // get tokenId of new nft
     const id = await nft.tokenId()
     // approve marketplace to spend nft
-    await(await nft.setApprovalForAll(marketplace.address, true)).wait()
+    await(await nft.setApprovalForAll(marketplace.target, true)).wait() // Use .target to get the address in ethers v6
     // add nft to marketplace
     const listingPrice = ethers.parseEther(price.toString())
-    await(await marketplace.makeItem(nft.address, id, listingPrice)).wait()
+    await(await marketplace.makeItem(nft.target, id, listingPrice)).wait()
+    console.log("inside mintThenList");
   }
 
   return (

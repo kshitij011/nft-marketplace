@@ -3,8 +3,9 @@
 // export default buildModule("NFT", (m) => {
 
 //   const NFT = m.contract("NFT", []);
+//   const Marketplace = m.contract("Marketplace", [1]);
 
-//   return { NFT };
+//   return { NFT, Marketplace };
 // });
 
 const { buildModule } = require("@nomicfoundation/hardhat-ignition/modules");
