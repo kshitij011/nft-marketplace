@@ -86,9 +86,10 @@ function Create({ marketplace, nft }) {
   }
 
   const mintThenList = async (uri) => {
-    console.log("metadataURI(mintThenList): ", uri);
+    console.log("metadataURI(mintThenList): ", uri, "\n Type: ", typeof(uri));
     // mint nft
-    await(await nft.mint(uri)).wait()
+    await(await nft.mint(uri)).wait();
+    console.log("NFT mint executed");
     // get tokenId of new nft
     const id = await nft.tokenId()
     // approve marketplace to spend nft

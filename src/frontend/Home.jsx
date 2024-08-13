@@ -8,6 +8,8 @@ function Home({marketplace, nft}) {
 
   const marketplaceItems = async () => {
     const itemCount = await marketplace.itemCount()
+    console.log("itmeCount", itemCount);
+
     console.log(itemCount);
     let items = []
     for (let i = 1; i <= itemCount; i++){
@@ -51,10 +53,18 @@ function Home({marketplace, nft}) {
     </div>
   )
 
+  if(!items.length) return (
+    <div className="p-8">
+      <h2>No items listed yet...</h2>
+      {/* <a href="./create"><h3>Create one</h3></a> */}
+      {/* <Link to="/create">Create</Link> */}
+    </div>
+  )
+
   return (
     <div className="flex justify-center">
       {items.map((item, idx) =>
-        (<div  className='overflow-hidden bg-purple-800 mt-5 rounded-md ml-5 p-2 justify-between flex flex-col items-center max-h-72 w-48'>
+        (<div key={idx} className='overflow-hidden bg-purple-800 mt-5 rounded-md ml-5 p-2 justify-between flex flex-col items-center max-h-72 w-48'>
           <div className="h-40 flex items-center">
           <a href={item.metadata}><img src={item.image} alt={`${item.name} image`} className='max-h-40 max-w-40 rounded object-cover'/></a>
           </div>
@@ -64,7 +74,7 @@ function Home({marketplace, nft}) {
           </div>
           <div>
             <div className="bg-green-300 rounded-md p-2 font-bold mt-1">
-              <button >
+              <button onClick={() => purchaseItem(item)}>
                 Buy for {ethers.formatEther(item.totalprice)} ETH
               </button>
             </div>

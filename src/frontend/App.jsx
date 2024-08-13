@@ -53,8 +53,8 @@ function App() {
         <Routes>
             <Route path = "/" element={<Home marketplace={marketplace} nft={nft}/>}/>
             <Route path = "/create" element={<Create marketplace={marketplace} nft={nft}/>}/>
-            <Route path = "/my-listed-items" element={<ListedItems />}/>
-            <Route path = "/my-items" element={<MyItems />}/>
+            <Route path = "/my-listed-items" element={<ListedItems marketplace={marketplace} nft={nft} account={account}/>}/>
+            <Route path = "/my-items" element={<MyItems marketplace={marketplace} nft={nft} account={account}/>}/>
         </Routes>
         </>
       )
@@ -65,4 +65,5 @@ function App() {
 
 export default App
 
+// npx hardhat node
 // npx hardhat ignition deploy ./ignition/modules/NFT.cjs --network localhost
